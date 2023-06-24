@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('custom-fields', 'App\Http\Controllers\CustomFieldController');
     Route::apiResource('custom-field-types', 'App\Http\Controllers\CustomFieldTypeController');
     Route::resource('statuses', 'App\Http\Controllers\StatusController');
+    Route::post('/statuses/reorderPositions', ['App\Http\Controllers\StatusController','reorderPositions']);
     Route::resource('workflow-rules', 'App\Http\Controllers\WorkflowRuleController');
     Route::resource('emails', 'App\Http\Controllers\EmailController');
     Route::resource('activities', 'App\Http\Controllers\ActivityController');

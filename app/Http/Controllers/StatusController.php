@@ -19,6 +19,7 @@ class StatusController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'position' => 'nullable',
         ]);
 
         $validatedData['company_id'] = Auth::user()->company_id;
@@ -42,6 +43,7 @@ class StatusController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'position' => 'nullable',
         ]);
 
         $validatedData['company_id'] = Auth::user()->company_id;
@@ -98,5 +100,33 @@ class StatusController extends Controller
         $status->where('company_id',Auth::user()->company_id)->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function reorderPositions(Request $request)
+    {
+        $positions = $request->input('positions');
+        // Validate the input
+        $request->validate($positions, [
+            '*.id' => 'required|exists:statuses,id',
+            '*.position' => 'required|integer',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($positions as $position) {
+                $status = Status::findOrFail($position['id']);
+                $status->position = $position['position'];
+                $status->save();
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Statuses reordered successfully']);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['message' => 'Failed to reorder statuses'], 500);
+        }
     }
 }

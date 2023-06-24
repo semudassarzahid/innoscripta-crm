@@ -18,15 +18,16 @@ class CustomFieldController extends Controller
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'type' => 'required|string',
+            'required' => 'boolean',
+            'position' => 'required|integer',
+            'custom_field_type_id' => 'required|integer',
         ]);
 
         $validatedData['company_id'] = Auth::user()->company_id;
 
         $customField = CustomField::create($validatedData);
 
-        return response()->json($customField, 201);
+        return response()->json($customField->load('type'), 201);
     }
 
     public function show(CustomField $customField)
@@ -38,8 +39,7 @@ class CustomFieldController extends Controller
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'type' => 'required|string',
+            'custom_field_type_id' => 'required|integer',
         ]);
 
         $validatedData['company_id'] = Auth::user()->company_id;
