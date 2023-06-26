@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('emails', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('subject');
-            $table->text('body');
+            $table->text('email_body');
+            $table->text('push_body');
             $table->string('slug')->unique();
             $table->timestamp('sent_at')->nullable();
             $table->unsignedBigInteger('company_id')->nullable();
@@ -28,10 +29,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('workflow_rules', function (Blueprint $table) {
+        Schema::table('notifications', function (Blueprint $table) {
             $table->dropForeign(['company_id']);
             $table->dropColumn('company_id');
         });
-        Schema::dropIfExists('emails');
+        Schema::dropIfExists('notifications');
     }
 };

@@ -10,7 +10,7 @@ use App\Models\WorkflowRule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Mail;
+use App\Events\NotificationEvent;
 
 class LeadController extends Controller
 {
@@ -149,9 +149,9 @@ class LeadController extends Controller
             // Update the status of the lead if validation passes
             $lead->status()->associate($newStatus);
             $lead->save();
-            // if(isset($workflowRule->email_slug) && $workflowRule->email_slug !== ''){
-            //     Mail::to($lead->email)->send(new CustomEmail($workflowRule->email_slug));
-            // }
+            if(isset($workflowRule->notification) && $workflowRule->notification !== null){
+                dispatch(new NotificationEvent(Auth::user(), $workflowRule->notification->slug), ['lead_name' => $lead->name]);
+            }
             return response()->json(['message' => 'Lead status updated successfully']);
         } else {
             // Return an error response if the validation fails

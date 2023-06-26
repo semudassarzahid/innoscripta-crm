@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('statuses', 'App\Http\Controllers\StatusController');
     Route::post('/statuses/reorderPositions', ['App\Http\Controllers\StatusController','reorderPositions']);
     Route::resource('workflow-rules', 'App\Http\Controllers\WorkflowRuleController');
-    Route::resource('emails', 'App\Http\Controllers\EmailController');
+    Route::resource('notifications', 'App\Http\Controllers\NotificationController');
     Route::resource('activities', 'App\Http\Controllers\ActivityController');
     Route::get('activities/by-lead/{id}', ['App\Http\Controllers\ActivityController','byLead']);
     Route::resource('reminders', 'App\Http\Controllers\ReminderController');
